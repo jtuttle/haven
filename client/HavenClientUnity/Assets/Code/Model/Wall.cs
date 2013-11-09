@@ -13,6 +13,17 @@ public class Wall {
         BuildWall();
     }
 
+    public List<WallPiece> GetCrossPieces(XY coord) {
+        List<WallPiece> pieces = new List<WallPiece>();
+
+        foreach(WallPiece piece in WallPieces) {
+            if(piece.Coord.X == coord.X || piece.Coord.Y == coord.Y)
+                pieces.Add(piece);
+        }
+
+        return pieces;
+    }
+
     private void BuildWall() {
         WallPieces = new List<WallPiece>();
 
