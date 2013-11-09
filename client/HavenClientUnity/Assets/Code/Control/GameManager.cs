@@ -8,9 +8,6 @@ public class GameManager : UnitySingleton<GameManager> {
 
     public Camera GameCamera;
 
-    public Map CurrentMap { get; private set; }
-    public XY CurrentCoord { get; private set; }
-
     private InputManager _inputManager;
     public InputManager Input { get { return _inputManager; } }
 
@@ -23,7 +20,7 @@ public class GameManager : UnitySingleton<GameManager> {
     public void Start() {
         _states.OnStateExit += OnExitState;
 
-        _states.ChangeGameState(new MapEnterState(CurrentMap));
+        _states.ChangeGameState(new MapEnterState());
     }
 
     public void Update() {
@@ -31,24 +28,9 @@ public class GameManager : UnitySingleton<GameManager> {
             _states.CurrentState.Update();
     }
 
-    public void UpdateCurrentCoord(Vector3 from, Vector3 to) {
-        int dx = to.x < from.x ? -1 : (to.x > from.x ? 1 : 0);
-        int dy = to.z < from.z ? -1 : (to.z > from.z ? 1 : 0);
-        CurrentCoord = CurrentCoord + new XY(dx, dy);
-    }
-
     private void OnExitState(BaseGameState state) {
         switch(state.GameState) {
             case GameStates.MapEnter:
-                
-                break;
-            case GameStates.MapWalk:
-
-                break;
-            case GameStates.MapDesign:
-                
-                break;
-            case GameStates.PlayerPlace:
                 
                 break;
             default:

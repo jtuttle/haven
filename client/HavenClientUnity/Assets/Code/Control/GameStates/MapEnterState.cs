@@ -5,10 +5,9 @@ using System;
 public class MapEnterState : BaseGameState {
     private Map _map;
 
-    public MapEnterState(Map map) 
+    public MapEnterState() 
         : base(GameStates.MapEnter) {
 
-        _map = map;
     }
 
     public override void EnterState() {
@@ -31,7 +30,7 @@ public class MapEnterState : BaseGameState {
         _map = new Map(100, 100);
 
         MapView mapView = UnityUtils.LoadResource<GameObject>("Prefabs/MapView", true).GetComponent<MapView>();
-        mapView.SetMap(_map);
+        mapView.SetModel(_map);
 
         //MapView mapView = UnityUtils.LoadResource<GameObject>("Prefabs/MapView", true).GetComponent<MapView>();
         //mapView.gameObject.name = "MapView";
@@ -50,9 +49,9 @@ public class MapEnterState : BaseGameState {
         //float camX = -(blockSize / 2) + (GameConfig.ROOM_WIDTH * blockSize) / 2;
         float camX = _map.Width / 2 * GameConfig.BLOCK_SIZE;
         //float camY = 180.0f;
-        float camY = 1500.0f;
+        float camY = 200.0f;
         //float camZ = 10.0f;
-        float camZ = _map.Height/ 4 * GameConfig.BLOCK_SIZE;
+        float camZ = _map.Height/ 4 * GameConfig.BLOCK_SIZE + 300;
 
         float lookX = camX;
         //float lookZ = -(blockSize / 2) + (GameConfig.ROOM_HEIGHT * blockSize) / 2;
