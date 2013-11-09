@@ -8,10 +8,14 @@ public class Map {
 
     public Wall Wall { get; private set; }
 
-    public Map(int width, int height) {
-        Width = width;
-        Height = height;
+    public Map(int size) {
+        // make map size odd so that we can have a center square
+        if(size % 2 != 0)
+            size = size + 1;
 
-        Wall = new Wall(Width, Height, 10);
+        Width = size;
+        Height = size;
+        
+        Wall = new Wall(5);
     }
 }

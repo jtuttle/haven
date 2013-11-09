@@ -27,7 +27,7 @@ public class MapEnterState : BaseGameState {
     }
 
     private void CreateMap() {
-        _map = new Map(100, 100);
+        _map = new Map(100);
 
         MapView mapView = UnityUtils.LoadResource<GameObject>("Prefabs/MapView", true).GetComponent<MapView>();
         mapView.SetModel(_map);
@@ -46,19 +46,8 @@ public class MapEnterState : BaseGameState {
 
         Camera cam = Camera.main;
 
-        //float camX = -(blockSize / 2) + (GameConfig.ROOM_WIDTH * blockSize) / 2;
-        float camX = _map.Width / 2 * GameConfig.BLOCK_SIZE;
-        //float camY = 180.0f;
-        float camY = 200.0f;
-        //float camZ = 10.0f;
-        float camZ = _map.Height/ 4 * GameConfig.BLOCK_SIZE + 300;
-
-        float lookX = camX;
-        //float lookZ = -(blockSize / 2) + (GameConfig.ROOM_HEIGHT * blockSize) / 2;
-        float lookZ = _map.Height / 2 * GameConfig.BLOCK_SIZE;
-
-        cam.transform.position = new Vector3(camX, camY, camZ);
-        cam.transform.LookAt(new Vector3(lookX, 0, lookZ));
+        cam.transform.position = new Vector3(0, 200.0f, -100.0f);
+        cam.transform.LookAt(Vector3.zero);
     }
 
     private void PlacePlayer() {
