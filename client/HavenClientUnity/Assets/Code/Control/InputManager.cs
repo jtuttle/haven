@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 
 public enum ButtonId {
+    Confirm
     //Confirm, Cancel, Attack, Special,
     //Previous, Next
 }
@@ -37,6 +38,9 @@ public class InputManager : MonoBehaviour {
     public delegate void AxialInputDelegate(float h, float v);
     public event AxialInputDelegate OnAxialInput = delegate { };
 
+    public delegate void CameraInputDelegate(float h);
+    public event CameraInputDelegate OnCameraInput = delegate { };
+
     private List<InputButton> _buttons;
 
     public void Awake() {
@@ -47,9 +51,10 @@ public class InputManager : MonoBehaviour {
     }
 
     public void Update() {
-        // axial
         OnAxialInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
+        OnCameraInput(Input.GetAxis("Camera"));
+        
         foreach(InputButton button in _buttons)
             button.CheckPress();
 	}

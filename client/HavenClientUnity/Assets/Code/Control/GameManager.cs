@@ -6,12 +6,18 @@ using System.Collections.Generic;
 public class GameManager : UnitySingleton<GameManager> {
     private GameStateMachine _states;
 
-    public Camera GameCamera;
+    public GameModel GameModel;
+
+    public PlayerCamera PlayerCamera;
+    public PlayerView PlayerView;
+    public MapView MapView;
 
     private InputManager _inputManager;
     public InputManager Input { get { return _inputManager; } }
 
     public override void Awake() {
+        GameModel = new GameModel();
+
         _states = new GameStateMachine();
 
         _inputManager = GetComponent<InputManager>();
@@ -31,7 +37,8 @@ public class GameManager : UnitySingleton<GameManager> {
     private void OnExitState(BaseGameState state) {
         switch(state.GameState) {
             case GameStates.MapEnter:
-                
+                _states.ChangeGameState(new MapWalkState());
+
                 break;
             default:
                 throw new Exception("Game state not found: " + state.GameState.ToString());

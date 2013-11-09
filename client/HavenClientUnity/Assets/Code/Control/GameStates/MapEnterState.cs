@@ -28,9 +28,12 @@ public class MapEnterState : BaseGameState {
 
     private void CreateMap() {
         _map = new Map(100);
+        GameManager.Instance.GameModel.Map = _map;
 
         MapView mapView = UnityUtils.LoadResource<GameObject>("Prefabs/MapView", true).GetComponent<MapView>();
         mapView.SetModel(_map);
+
+        GameManager.Instance.MapView = mapView;
 
         //MapView mapView = UnityUtils.LoadResource<GameObject>("Prefabs/MapView", true).GetComponent<MapView>();
         //mapView.gameObject.name = "MapView";
@@ -51,13 +54,17 @@ public class MapEnterState : BaseGameState {
     }
 
     private void PlacePlayer() {
-        //PlayerView playerView = UnityUtils.LoadResource<GameObject>("Prefabs/PlayerView", true).GetComponent<PlayerView>();
-        //playerView.gameObject.name = "PlayerView";
+        Player player = new Player();
+        GameManager.Instance.GameModel.Player = player;
 
-        //MapView mapView = GameManager.Instance.MapView;
-        //Vector2 mapCenter = mapView.RoomBounds.center;
-        //playerView.transform.position = new Vector3(mapCenter.x, GameConfig.BLOCK_SIZE, mapCenter.y);
+        PlayerView playerView = UnityUtils.LoadResource<GameObject>("Prefabs/PlayerView", true).GetComponent<PlayerView>();
+        playerView.SetModel(player);
 
-        //GameManager.Instance.PlayerView = playerView;
+        Vector3 playerPos = playerView.transform.position;
+        Vector3 playerScale = playerView.transform.localScale;
+        playerView.transform.position = new Vector3(playerPos.x, playerScale.y / 2, playerPos.z);
+
+        GameManager.Instance.PlayerView = playerView;
+        GameManager.Instance.PlayerCamera.Target = playerView.gameObject;
     }
 }

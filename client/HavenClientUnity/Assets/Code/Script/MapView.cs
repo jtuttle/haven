@@ -2,14 +2,15 @@
 using System.Collections;
 
 public class MapView : MonoBehaviour {
-    private GameObject _groundView;
-    private WallView _wallView;
+    public WallView WallView { get; private set; }
 
+    private GameObject _groundView;
+    
     private Map _map;
 
     public void Awake() {
         _groundView = GameObject.Find("GroundView");
-        _wallView = GameObject.Find("WallView").GetComponent<WallView>();
+        WallView = GameObject.Find("WallView").GetComponent<WallView>();
     }
 
     public void SetModel(Map map) {
@@ -17,6 +18,11 @@ public class MapView : MonoBehaviour {
 
         _groundView.transform.localScale = new Vector3(GameConfig.BLOCK_SIZE * _map.Width, 1, GameConfig.BLOCK_SIZE * _map.Height);
 
-        _wallView.SetModel(_map.Wall);
+        WallView.SetModel(_map.Wall);
+    }
+
+    public XY GetMapCoordFromWorldCoord(XY worldCoord) {
+        int blockSize = GameConfig.BLOCK_SIZE;
+        return new XY(worldCoord.X / blockSize, worldCoord.Y / blockSize);
     }
 }
