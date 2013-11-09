@@ -60,10 +60,6 @@ public class MapEnterState : BaseGameState {
         PlayerView playerView = UnityUtils.LoadResource<GameObject>("Prefabs/PlayerView", true).GetComponent<PlayerView>();
         playerView.SetModel(player);
 
-        Vector3 playerPos = playerView.transform.position;
-        Vector3 playerScale = playerView.transform.localScale;
-        playerView.transform.position = new Vector3(playerPos.x, playerScale.y / 2, playerPos.z);
-
         GameManager.Instance.PlayerView = playerView;
         GameManager.Instance.PlayerCamera.Target = playerView.gameObject;
     }

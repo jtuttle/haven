@@ -23,6 +23,21 @@ public class MapView : MonoBehaviour {
 
     public XY GetMapCoordFromWorldCoord(XY worldCoord) {
         int blockSize = GameConfig.BLOCK_SIZE;
-        return new XY(worldCoord.X / blockSize, worldCoord.Y / blockSize);
+        int halfBlockSize = GameConfig.BLOCK_SIZE / 2;
+
+        float worldX = (worldCoord.X + halfBlockSize * (worldCoord.X < 0 ? -1 : 1)) / blockSize;
+        float worldZ = (worldCoord.Y + halfBlockSize * (worldCoord.Y < 0 ? -1 : 1)) / blockSize;
+
+        return new XY((int)worldX, (int)worldZ);
+    }
+
+    public XY GetMapCoordFromWorldCoord(Vector3 worldCoord) {
+        int blockSize = GameConfig.BLOCK_SIZE;
+        int halfBlockSize = GameConfig.BLOCK_SIZE / 2;
+
+        float worldX = (worldCoord.x + halfBlockSize * (worldCoord.x < 0 ? -1 : 1)) / blockSize;
+        float worldZ = (worldCoord.z + halfBlockSize * (worldCoord.z < 0 ? -1 : 1)) / blockSize;
+
+        return new XY((int)worldX, (int)worldZ);
     }
 }

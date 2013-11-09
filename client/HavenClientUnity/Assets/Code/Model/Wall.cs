@@ -24,6 +24,18 @@ public class Wall {
         return pieces;
     }
 
+    public bool OnHorizontal(XY mapCoord) {
+        return Mathf.Abs(mapCoord.Y) == Radius;
+    }
+
+    public bool OnVertical(XY mapCoord) {
+        return Mathf.Abs(mapCoord.X) == Radius;
+    }
+
+    public bool OnCorner(XY mapCoord) {
+        return OnHorizontal(mapCoord) && OnVertical(mapCoord);
+    }
+
     private void BuildWall() {
         WallPieces = new List<WallPiece>();
 
