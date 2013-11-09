@@ -2,6 +2,11 @@
 using System.Collections;
 
 public class Map {
-    public int Width;
-    public int Height;
+    public int Width { get; private set; }
+    public int Height { get; private set; }
+
+    public Map(int width, int height) {
+        Width = width;
+        Height = height;
+    }
 }
