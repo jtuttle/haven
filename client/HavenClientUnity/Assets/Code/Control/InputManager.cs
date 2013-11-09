@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System;
 
 public enum ButtonId {
-    Confirm, Cancel, Attack, Special,
-    Previous, Next
+    //Confirm, Cancel, Attack, Special,
+    //Previous, Next
 }
 
 public class InputButton {
