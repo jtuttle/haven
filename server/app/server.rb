@@ -16,11 +16,14 @@ class Server
     end
     client.id = candidate_id
     clients << client
+    client.send_data("identity #{client.id}\n")
+    broadcast "#{client.id} join"
     log :server, "New client #{client.id}"
   end
 
   def unregister(client)
     clients.delete(client)
+    broadcast "#{client.id} drop"
     log :server, "Client disconnected #{client.id}"
   end
 
@@ -30,7 +33,6 @@ class Server
       client.send_data(data)
     end
   end
-
 
   def run
     begin

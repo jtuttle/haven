@@ -2,8 +2,12 @@ class Client < EventMachine::Connection
   include LogHelper
 
   attr_accessor :server, :id
+  attr_accessor :name, :pos
+
   def initialize(server)
     self.server = server
+    self.name = 'noname'
+    self.pos = [0,0,0]
   end
 
   def post_init
@@ -14,10 +18,9 @@ class Client < EventMachine::Connection
     rawdata.split("\n").each do |line|
       log :debug, "[#{id}] received: #{line}"
       data = line.split(' ')
-      cmd = data.shift
+      cmd = (data.shift || '').gsub('-', '_').downcase
       if cmd && respond_to?("on_#{cmd}")
-        result = send("on_#{cmd}", *data)
-        reply result if result
+        send("on_#{cmd}", *data)
       else
         reply "error what?"
       end
@@ -26,7 +29,6 @@ class Client < EventMachine::Connection
 
   def unbind
     server.unregister self
-    broadcast "drop #{id}"
   end
 
   def broadcast(*args)
@@ -39,5 +41,17 @@ class Client < EventMachine::Connection
     msg = args.join(' ')
     msg += "\n" unless msg.end_with?("\n")
     send_data(msg)
+  end
+
+  def on_set_position(px, py, pz)
+    self.pos = [px, py, pz]
+    broadcast "#{id} position #{pos.join(' ')}"
+  end
+
+  def on_get_world
+    messages = server.clients.map{|c|
+      "#{c.id} position #{c.pos.join(' ')}"
+    }
+    reply(messages.join("\n"))
   end
 end
