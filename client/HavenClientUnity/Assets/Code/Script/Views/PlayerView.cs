@@ -10,11 +10,19 @@ public class PlayerView : MonoBehaviour {
 
     public Player Model { get; private set; }
     public bool Dead { get; private set; }
+    public bool CanShoot { get; private set; }
 
     private bool _tweening;
 
+    private TimeKeeper _arrowTimer;
+
     public void Awake() {
+        CanShoot = true;
+
         _tweening = false;
+
+        _arrowTimer = TimeKeeper.GetTimer(1, 1);
+        _arrowTimer.OnTimerComplete += OnArrowTimerComplete;
     }
 
     public void SetModel(Player player) {
@@ -206,6 +214,9 @@ public class PlayerView : MonoBehaviour {
         HOTween.To(arrowView.transform, time, parms);
 
         ShootSound.Play();
+
+        CanShoot = false;
+        _arrowTimer.StartTimer();
     }
 
     private void OnShootProjectileComplete(TweenEvent e) {
@@ -216,5 +227,9 @@ public class PlayerView : MonoBehaviour {
 
         if(target != null && target.tag == "Enemy")
             target.GetComponent<EnemyView>().Die();
+    }
+
+    private void OnArrowTimerComplete(TimeKeeper timer) {
+        CanShoot = true;
     }
 }

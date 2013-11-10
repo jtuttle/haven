@@ -5,8 +5,9 @@ public class EnemyView : MonoBehaviour {
     public delegate void EnemyDieDelegate(EnemyView enemyView);
     public event EnemyDieDelegate OnEnemyDie = delegate { };
 
-    public GameObject Visual;
+    public int Health;
     public int BloodCount;
+    public GameObject Visual;
 
     public AudioSource GrowlSound;
     public AudioSource DieSound;
