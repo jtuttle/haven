@@ -33,6 +33,7 @@ public class MapWalkState : BaseGameState {
 
     private void OnAxialInput(float h, float v) {
         _playerView.Move(h, v, GameManager.Instance.PlayerCamera.camera);
+		PlayerMoved();
     }
 
     private void OnConfirmPress() {
@@ -51,5 +52,11 @@ public class MapWalkState : BaseGameState {
         GameManager.Instance.GameModel.Player.OnWall = true;
 
         //_playerView.transform.position = 
+		PlayerMoved();
     }
+	
+	private void PlayerMoved() {
+		GameManager.Instance.Client.SendPosition(_playerView.transform.position.x,
+			_playerView.transform.position.y, _playerView.transform.position.z);
+	}
 }

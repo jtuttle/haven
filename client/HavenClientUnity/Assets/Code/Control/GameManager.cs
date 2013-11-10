@@ -14,6 +14,8 @@ public class GameManager : UnitySingleton<GameManager> {
 
     private InputManager _inputManager;
     public InputManager Input { get { return _inputManager; } }
+	
+	public MpClient Client { get; private set; }
 
     public override void Awake() {
         GameModel = new GameModel();
@@ -21,12 +23,16 @@ public class GameManager : UnitySingleton<GameManager> {
         _states = new GameStateMachine();
 
         _inputManager = GetComponent<InputManager>();
+		
+		Client = new MpClient();
     }
 
     public void Start() {
         _states.OnStateExit += OnExitState;
 
         _states.ChangeGameState(new MapEnterState());
+		
+		Client.Start();
     }
 
     public void Update() {
