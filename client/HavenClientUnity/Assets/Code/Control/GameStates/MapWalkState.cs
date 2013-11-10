@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Holoville.HOTween;
 
 public class MapWalkState : BaseGameState {
     private PlayerView _playerView;
@@ -20,17 +21,17 @@ public class MapWalkState : BaseGameState {
     public override void EnterState() {
         base.EnterState();
 
-        GameManager.Instance.Input.OnAxialLeftInput += OnAxialInput;
+        GameManager.Instance.Input.OnAxialLeftInput += OnAxialLeftInput;
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress += OnConfirmPress;
-        GameManager.Instance.Input.GetButton(ButtonId.Action).OnPress += OnActionPress;
+        GameManager.Instance.Input.OnTriggerRightInput += OnTriggerRightInput;
 
         _enemySpawner.Start();
     }
 
     public override void ExitState() {
-        GameManager.Instance.Input.OnAxialLeftInput -= OnAxialInput;
+        GameManager.Instance.Input.OnAxialLeftInput -= OnAxialLeftInput;
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress -= OnConfirmPress;
-        GameManager.Instance.Input.GetButton(ButtonId.Action).OnPress -= OnActionPress;
+        GameManager.Instance.Input.OnTriggerRightInput -= OnTriggerRightInput;
 
         base.ExitState();
     }
@@ -45,7 +46,7 @@ public class MapWalkState : BaseGameState {
         base.Dispose();
     }
 
-    private void OnAxialInput(float h, float v) {
+    private void OnAxialLeftInput(float h, float v) {
         _playerView.Move(h, v, GameManager.Instance.PlayerCamera.camera);
 		GameManager.Instance.Multiplayer.PlayerMoved();
     }
@@ -90,8 +91,52 @@ public class MapWalkState : BaseGameState {
         _playerView.DoDescendWallTween(wallPieceView, direction);
     }
 
-    private void OnActionPress() {
-        float h = Input.GetAxis("RightHorizontal");
-        float v = Input.GetAxis("RightVertical");
+    private void OnTriggerRightInput() {
+        //ShootProjectile();
+
+        Vector3 origin = _playerView.transform.position + new Vector3(0, 5.0f, 0);
+        Vector3 direction = new Vector3(Input.GetAxis("RightHorizontal"), 0, Input.GetAxis("RightVertical"));
+
+        RaycastHit hit;
+
+        if(Physics.Raycast(origin, direction * 200.0f, out hit)) {
+            GameObject target = hit.collider.gameObject;
+
+            // remove enemy from collisions to avoid double shot
+            if(target.tag == "Enemy")
+                target.collider.enabled = false;
+
+            ShootProjectile(origin, hit.point, target);
+            //hit.collider.gameObject.transform.position += new Vector3(0, 1.0f, 0);
+        } else {
+            Debug.Log("NO");
+            // show a dummy arrow?
+        }
+    }
+
+    private void ShootProjectile(Vector3 from, Vector3 to, GameObject target) {
+        GameObject arrowView = UnityUtils.LoadResource<GameObject>("Prefabs/ArrowView", true);
+        arrowView.transform.position = from;
+
+        TweenParms parms = new TweenParms();
+        parms.Prop("position", to);
+        parms.Ease(EaseType.Linear);
+        parms.OnComplete(OnShootProjectileComplete, arrowView, target);
+
+        float velocity = 200.0f;
+        float distance = Vector3.Distance(from, to);
+        float time = distance / velocity;
+
+        HOTween.To(arrowView.transform, time, parms);
+    }
+
+    private void OnShootProjectileComplete(TweenEvent e) {
+        GameObject arrowView = (GameObject)e.parms[0];
+        GameObject target = (GameObject)e.parms[1];
+
+        GameObject.Destroy(arrowView);
+
+        if(target.tag == "Enemy")
+            _enemySpawner.DestroyEnemy(target.GetComponent<EnemyView>());
     }
 }
