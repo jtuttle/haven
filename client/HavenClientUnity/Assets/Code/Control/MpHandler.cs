@@ -38,7 +38,9 @@ public class MpHandler
 				OtherPlayer op = new OtherPlayer(cid);
 		    	OtherPlayers[cid] = op;
 				op.Actor = UnityUtils.LoadResource<GameObject>("Prefabs/OtherPlayer", true);
-				Debug.Log (string.Format("[MpHandler] Someone joined {0}, now {1} other players", cid, OtherPlayers.Count));
+				MpUtils.Log (MpUtils.LogLevel.Info, "MpHandler",
+					"Someone joined {0}, now {1} other players",
+					cid, OtherPlayers.Count);
 			});
 		}
     }
@@ -50,7 +52,9 @@ public class MpHandler
 				OtherPlayer op = OtherPlayers[cid];
 				GameObject.Destroy(op.Actor);
 				OtherPlayers.Remove(cid);
-				Debug.Log (string.Format("[MpHandler] Someone dropped out, was {0}", cid));
+				MpUtils.Log (MpUtils.LogLevel.Info, "MpHandler",
+					"Someone dropped out, was {0}, now {1} other players",
+					cid, OtherPlayers.Count);
 			});
 		}
 	}
