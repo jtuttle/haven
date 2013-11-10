@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
+
 
 public class MapEnterState : BaseGameState {
     private Map _map;
@@ -15,7 +15,7 @@ public class MapEnterState : BaseGameState {
 
         CreateMap();
         PlacePlayer();
-        AddTrees();
+        //AddTrees();
 
         ExitState();
     }
@@ -48,6 +48,21 @@ public class MapEnterState : BaseGameState {
     }
 
     private void AddTrees() {
-        // TODO
+        //float rMin = _map.Wall.Radius * GameConfig.BLOCK_SIZE;
+        //float rMax = 400;
+
+        float radius = 500;
+
+        for(int k = 0; k < 100; k++) {
+            //float x = Random.Range(rMin, rMax) * (Random.Range(0, 2) == 0 ? 1 : -1);
+            //float z = Random.Range(rMin, rMax) * (Random.Range(0, 2) == 0 ? 1 : -1);
+
+            float x = Random.Range(-radius, radius);
+            float z = Random.Range(-radius, radius);
+
+            GameObject tree = UnityUtils.LoadResource<GameObject>("Prefabs/TreeView", true);
+            tree.transform.position = new Vector3(x, 0, z);
+            tree.transform.localScale *= 5.0f;
+        }
     }
 }

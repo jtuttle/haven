@@ -3,6 +3,11 @@ using System.Collections;
 using Holoville.HOTween;
 
 public class PlayerView : MonoBehaviour {
+    public AudioSource ShootSound;
+    public AudioSource DieSound;
+
+    public GameObject Visual;
+
     public Player Model { get; private set; }
     public bool Dead { get; private set; }
 
@@ -72,8 +77,11 @@ public class PlayerView : MonoBehaviour {
 
     private void Die() {
         MakeBlood();
+        DieSound.Play();
+
+        rigidbody.detectCollisions = false;
+        Visual.renderer.enabled = false;
         
-        gameObject.SetActive(false);
         Dead = true;
     }
 
@@ -91,7 +99,9 @@ public class PlayerView : MonoBehaviour {
     }
 
     public void Resurrect() {
-        gameObject.SetActive(true);
+        rigidbody.detectCollisions = true;
+        Visual.renderer.enabled = true;
+
         Dead = false;
     }
 
@@ -177,5 +187,34 @@ public class PlayerView : MonoBehaviour {
     private void OnTweenToGroundComplete(TweenEvent e) {
         rigidbody.detectCollisions = true;
         _tweening = false;
+    }
+
+    public void ShootProjectile(Vector3 from, Vector3 to, GameObject target) {
+        GameObject arrowView = UnityUtils.LoadResource<GameObject>("Prefabs/ArrowView", true);
+        arrowView.transform.position = from;
+        arrowView.transform.LookAt(to);
+
+        TweenParms parms = new TweenParms();
+        parms.Prop("position", to);
+        parms.Ease(EaseType.Linear);
+        parms.OnComplete(OnShootProjectileComplete, arrowView, target);
+
+        float velocity = 200.0f;
+        float distance = Vector3.Distance(from, to);
+        float time = distance / velocity;
+
+        HOTween.To(arrowView.transform, time, parms);
+
+        ShootSound.Play();
+    }
+
+    private void OnShootProjectileComplete(TweenEvent e) {
+        GameObject arrowView = (GameObject)e.parms[0];
+        GameObject target = (GameObject)e.parms[1];
+
+        GameObject.Destroy(arrowView);
+
+        if(target != null && target.tag == "Enemy")
+            target.GetComponent<EnemyView>().Die();
     }
 }
