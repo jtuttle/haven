@@ -5,6 +5,7 @@ using System;
 
 public enum ButtonId {
     Confirm, Cancel, Action, Special,
+    TriggerLeft, TriggerRight
     //Previous, Next
 }
 
@@ -40,6 +41,16 @@ public class InputManager : MonoBehaviour {
     public delegate void AxialInputRightDelegate(float h, float v);
     public event AxialInputRightDelegate OnAxialRightInput = delegate { };
 
+    public delegate void TriggerRightDelegate();
+    public event TriggerRightDelegate OnTriggerRightInput = delegate { };
+
+    /*
+    public delegate void TriggerDelegate(float h, float v);
+    public event TriggerDelegate OnTriggerInput = delegate { };
+    */
+
+    private bool _trigRightPressed;
+
     private List<InputButton> _buttons;
 
     public void Awake() {
@@ -47,13 +58,24 @@ public class InputManager : MonoBehaviour {
 
         foreach(ButtonId id in Enum.GetValues(typeof(ButtonId)))
             _buttons.Add(new InputButton(id));
+
+        _trigRightPressed = false;
     }
 
     public void Update() {
-        OnAxialLeftInput(Input.GetAxis("LeftHorizontal"), Input.GetAxis("LeftVertical"));
+        OnAxialLeftInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         OnAxialRightInput(Input.GetAxis("RightHorizontal"), Input.GetAxis("RightVertical"));
-        
+
+        // right trigger
+        bool trigRightPressed = Input.GetAxis("TriggerRight") > 0;
+        if(!trigRightPressed) _trigRightPressed = false;
+
+        if(trigRightPressed && !_trigRightPressed) {
+            _trigRightPressed = true;
+            OnTriggerRightInput();
+        }
+
         foreach(InputButton button in _buttons)
             button.CheckPress();
 	}
