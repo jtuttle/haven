@@ -35,12 +35,14 @@ public class MpHandler
     {
 		if (!OtherPlayers.ContainsKey (cid)) {
 			DelegateWork(() => {
-				OtherPlayer op = new OtherPlayer(cid);
-		    	OtherPlayers[cid] = op;
-				op.Actor = UnityUtils.LoadResource<GameObject>("Prefabs/OtherPlayer", true);
-				MpUtils.Log (MpUtils.LogLevel.Info, "MpHandler",
-					"Someone joined {0}, now {1} other players",
-					cid, OtherPlayers.Count);
+				if (!OtherPlayers.ContainsKey (cid)) {
+					OtherPlayer op = new OtherPlayer(cid);
+			    	OtherPlayers[cid] = op;
+					op.Actor = UnityUtils.LoadResource<GameObject>("Prefabs/OtherPlayer", true);
+					MpUtils.Log (MpUtils.LogLevel.Info, "MpHandler",
+						"Someone joined {0}, now {1} other players",
+						cid, OtherPlayers.Count);
+				}
 			});
 		}
     }
@@ -49,12 +51,14 @@ public class MpHandler
 	{
 		if (OtherPlayers.ContainsKey(cid)) {
 			DelegateWork (() => {
-				OtherPlayer op = OtherPlayers[cid];
-				GameObject.Destroy(op.Actor);
-				OtherPlayers.Remove(cid);
-				MpUtils.Log (MpUtils.LogLevel.Info, "MpHandler",
-					"Someone dropped out, was {0}, now {1} other players",
-					cid, OtherPlayers.Count);
+				if (OtherPlayers.ContainsKey(cid)) {
+					OtherPlayer op = OtherPlayers[cid];
+					GameObject.Destroy(op.Actor);
+					OtherPlayers.Remove(cid);
+					MpUtils.Log (MpUtils.LogLevel.Info, "MpHandler",
+						"Someone dropped out, was {0}, now {1} other players",
+						cid, OtherPlayers.Count);
+				}
 			});
 		}
 	}
