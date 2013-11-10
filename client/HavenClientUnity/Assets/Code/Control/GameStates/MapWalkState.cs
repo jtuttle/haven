@@ -20,14 +20,17 @@ public class MapWalkState : BaseGameState {
     public override void EnterState() {
         base.EnterState();
 
-        GameManager.Instance.Input.OnAxialInput += OnAxialInput;
+        GameManager.Instance.Input.OnAxialLeftInput += OnAxialInput;
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress += OnConfirmPress;
+        GameManager.Instance.Input.GetButton(ButtonId.Action).OnPress += OnActionPress;
 
         _enemySpawner.Start();
     }
 
     public override void ExitState() {
-        GameManager.Instance.Input.OnAxialInput -= OnAxialInput;
+        GameManager.Instance.Input.OnAxialLeftInput -= OnAxialInput;
+        GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress -= OnConfirmPress;
+        GameManager.Instance.Input.GetButton(ButtonId.Action).OnPress -= OnActionPress;
 
         base.ExitState();
     }
@@ -84,5 +87,12 @@ public class MapWalkState : BaseGameState {
     private void DescendFromWall(WallPieceView wallPieceView, Vector3 direction) {
         GameManager.Instance.GameModel.Player.OnWall = false;
         _playerView.DoDescendWallTween(wallPieceView, direction);
+    }
+
+    private void OnActionPress() {
+        float h = Input.GetAxis("RightHorizontal");
+        float v = Input.GetAxis("RightVertical");
+
+        
     }
 }
