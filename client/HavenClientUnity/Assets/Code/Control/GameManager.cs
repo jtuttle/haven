@@ -27,6 +27,8 @@ public class GameManager : UnitySingleton<GameManager> {
         _inputManager = GetComponent<InputManager>();
 		
 		Client = new MpClient();
+		Client.Host = GameConfig.MpHost;
+		Client.Port = GameConfig.MpPort;
 		Multiplayer = new MpHandler(Client);
     }
 
