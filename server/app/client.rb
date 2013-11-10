@@ -16,7 +16,6 @@ class Client < EventMachine::Connection
 
   def receive_data(rawdata)
     rawdata.split("\n").each do |line|
-      log :debug, "[#{id}] received: #{line}"
       data = line.split(' ')
       cmd = (data.shift || '').gsub('-', '_').downcase
       if cmd && respond_to?("on_#{cmd}")
@@ -36,12 +35,10 @@ class Client < EventMachine::Connection
   end
 
   def broadcast(*args)
-    log "client-#{id}", "broadcast: #{args.join(' ')}"
     server.broadcast(*args)
   end
 
   def reply(*args)
-    log "client-#{id}", "sent: #{args.join(' ')}"
     msg = args.join(' ')
     msg += "\n" unless msg.end_with?("\n")
     send_data(msg)
