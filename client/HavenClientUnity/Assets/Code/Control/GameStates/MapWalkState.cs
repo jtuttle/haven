@@ -6,11 +6,15 @@ public class MapWalkState : BaseGameState {
     private PlayerView _playerView;
     private MapView _mapView;
 
+    private EnemyController _enemyController;
+
     public MapWalkState() 
         : base(GameStates.MapWalk) {
 
         _playerView = GameManager.Instance.PlayerView;
         _mapView = GameManager.Instance.MapView;
+
+        _enemyController = new EnemyController(1000.0f);
     }
 
     public override void EnterState() {
@@ -18,6 +22,8 @@ public class MapWalkState : BaseGameState {
 
         GameManager.Instance.Input.OnAxialInput += OnAxialInput;
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress += OnConfirmPress;
+
+        _enemyController.Start();
     }
 
     public override void ExitState() {
@@ -65,8 +71,7 @@ public class MapWalkState : BaseGameState {
                 Vector3 direction = camera.transform.right * h + new Vector3(forward.x, 0, forward.z) * v;
 
                 if(onCorner && (direction.z != 0 || direction.x != 0)) {
-                    //bool outside 
-                    //_playerView.DoDescendWallTween(touchedPiece, (pos.z > 0 && v > 0) || (pos.z < 0 && v < 0));
+                    // TODO: ascend corners
                 } else if(onHori && direction.z != 0) {
                     DescendFromWall(touchedPiece, new Vector3(0, 0, direction.z < 0 ? -1 : 1));
                 } else if(onVert && direction.x != 0) {

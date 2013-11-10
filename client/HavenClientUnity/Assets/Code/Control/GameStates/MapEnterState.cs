@@ -14,7 +14,6 @@ public class MapEnterState : BaseGameState {
         base.EnterState();
 
         CreateMap();
-        SetCamera();
         PlacePlayer();
 
         ExitState();
@@ -34,23 +33,6 @@ public class MapEnterState : BaseGameState {
         mapView.SetModel(_map);
 
         GameManager.Instance.MapView = mapView;
-
-        //MapView mapView = UnityUtils.LoadResource<GameObject>("Prefabs/MapView", true).GetComponent<MapView>();
-        //mapView.gameObject.name = "MapView";
-
-        //mapView.SetMap(_map);
-        //mapView.UpdateRoomBounds(_map.Entrance.Coord);
-
-        //GameManager.Instance.MapView = mapView;
-    }
-
-    private void SetCamera() {
-        int blockSize = GameConfig.BLOCK_SIZE;
-
-        Camera cam = Camera.main;
-
-        cam.transform.position = new Vector3(0, 200.0f, -100.0f);
-        cam.transform.LookAt(Vector3.zero);
     }
 
     private void PlacePlayer() {

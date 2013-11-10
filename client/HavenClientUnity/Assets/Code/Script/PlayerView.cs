@@ -26,6 +26,7 @@ public class PlayerView : MonoBehaviour {
 
             WallView wallView = GameManager.Instance.MapView.WallView;
 
+            // TODO: bug here, can't turn corners, mrrrrr
             if(!wallView.OnWall(pos + new Vector3(velocity.x, 0, 0)))
                 velocity = new Vector3(0, velocity.y, velocity.z);
 
