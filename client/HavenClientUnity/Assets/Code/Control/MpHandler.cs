@@ -23,7 +23,7 @@ public class MpHandler
 	private void PositionUpdate (string cid, float px, float py, float pz)
 	{
 		if (!OtherPlayers.ContainsKey(cid)) {
-			return;
+			SomeoneJoined(cid);
 		}
 		DelegateWork(() => {
 			OtherPlayers[cid].Actor.transform.position = new Vector3(px, py, pz);
