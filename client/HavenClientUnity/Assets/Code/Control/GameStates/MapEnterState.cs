@@ -15,7 +15,7 @@ public class MapEnterState : BaseGameState {
 
         CreateMap();
         PlacePlayer();
-        //AddTrees();
+        AddTrees();
 
         ExitState();
     }
@@ -51,9 +51,14 @@ public class MapEnterState : BaseGameState {
         //float rMin = _map.Wall.Radius * GameConfig.BLOCK_SIZE;
         //float rMax = 400;
 
-        float radius = 500;
+        MapView mapView = GameManager.Instance.MapView;
 
-        for(int k = 0; k < 100; k++) {
+        GameObject trees = new GameObject("Trees");
+        trees.transform.parent = mapView.transform;
+
+        float radius = 700;
+
+        for(int k = 0; k < 200; k++) {
             //float x = Random.Range(rMin, rMax) * (Random.Range(0, 2) == 0 ? 1 : -1);
             //float z = Random.Range(rMin, rMax) * (Random.Range(0, 2) == 0 ? 1 : -1);
 
@@ -62,7 +67,8 @@ public class MapEnterState : BaseGameState {
 
             GameObject tree = UnityUtils.LoadResource<GameObject>("Prefabs/TreeView", true);
             tree.transform.position = new Vector3(x, 0, z);
-            tree.transform.localScale *= 5.0f;
+            tree.transform.localScale *= 2.0f;
+            tree.transform.parent = trees.transform;
         }
     }
 }

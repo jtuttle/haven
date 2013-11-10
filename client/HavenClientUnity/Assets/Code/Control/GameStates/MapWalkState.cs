@@ -97,7 +97,7 @@ public class MapWalkState : BaseGameState {
     }
 
     private void OnTriggerRightInput() {
-        if(_playerView.Dead) return;
+        if(_playerView.Dead || !_playerView.CanShoot) return;
 
         Vector3 arrowOrigin = _playerView.transform.position + new Vector3(0, 5.0f, 0);
         Vector3 rayOrigin = new Vector3(arrowOrigin.x, 5.0f, arrowOrigin.z);
@@ -116,7 +116,7 @@ public class MapWalkState : BaseGameState {
         } else {
             float angle = (float)Mathf.Atan2(direction.z, direction.x);
 
-            float radius = 100.0f;
+            float radius = 200.0f;
             Vector3 target = rayOrigin + new Vector3(radius * (float)Mathf.Cos(angle), 0, radius * (float)Mathf.Sin(angle));
 
             _playerView.ShootProjectile(arrowOrigin, target, null);
