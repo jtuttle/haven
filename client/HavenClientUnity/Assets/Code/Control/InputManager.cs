@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System;
 
 public enum ButtonId {
-    Confirm
-    //Confirm, Cancel, Attack, Special,
+    Confirm, Cancel, Action, Special,
     //Previous, Next
 }
 
@@ -35,11 +34,11 @@ public class InputButton {
 }
 
 public class InputManager : MonoBehaviour {
-    public delegate void AxialInputDelegate(float h, float v);
-    public event AxialInputDelegate OnAxialInput = delegate { };
+    public delegate void AxialInputLeftDelegate(float h, float v);
+    public event AxialInputLeftDelegate OnAxialLeftInput = delegate { };
 
-    public delegate void CameraInputDelegate(float h);
-    public event CameraInputDelegate OnCameraInput = delegate { };
+    public delegate void AxialInputRightDelegate(float h, float v);
+    public event AxialInputRightDelegate OnAxialRightInput = delegate { };
 
     private List<InputButton> _buttons;
 
@@ -51,9 +50,9 @@ public class InputManager : MonoBehaviour {
     }
 
     public void Update() {
-        OnAxialInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        OnAxialLeftInput(Input.GetAxis("LeftHorizontal"), Input.GetAxis("LeftVertical"));
 
-        OnCameraInput(Input.GetAxis("Camera"));
+        OnAxialRightInput(Input.GetAxis("RightHorizontal"), Input.GetAxis("RightVertical"));
         
         foreach(InputButton button in _buttons)
             button.CheckPress();

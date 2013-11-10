@@ -34,4 +34,13 @@ public class WallView : MonoBehaviour {
 
         return null;
     }
+
+    public bool OnWall(Vector3 position) {
+        float posX = position.x;
+        float posZ = position.z;
+        float radius = _model.Radius * GameConfig.BLOCK_SIZE;
+
+        return (posX == -radius || posX == radius) && (posZ > -radius && posZ < radius) ||
+            (posZ == -radius || posZ == radius) && (posX > -radius && posX < radius);
+    }
 }
