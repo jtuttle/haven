@@ -32,12 +32,14 @@ public class MpHandler
 	
 	private void SomeoneJoined (string cid)
     {
-		DelegateWork(() => {
-			Debug.Log (string.Format("[GameManager] Someone joined {0}", cid));
-			OtherPlayer op = new OtherPlayer(cid);
-	    	OtherPlayers[cid] = op;
-			op.Actor = UnityUtils.LoadResource<GameObject>("Prefabs/OtherPlayer", true);
-		});
+		if (!OtherPlayers.ContainsKey (cid)) {
+			DelegateWork(() => {
+				Debug.Log (string.Format("[GameManager] Someone joined {0}, now {1} other players", cid, OtherPlayers.Count));
+				OtherPlayer op = new OtherPlayer(cid);
+		    	OtherPlayers[cid] = op;
+				op.Actor = UnityUtils.LoadResource<GameObject>("Prefabs/OtherPlayer", true);
+			});
+		}
     }
 	
 	public void PlayerMoved()
