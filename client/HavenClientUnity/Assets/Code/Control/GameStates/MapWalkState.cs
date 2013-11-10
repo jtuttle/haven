@@ -97,6 +97,10 @@ public class MapWalkState : BaseGameState {
         Vector3 origin = _playerView.transform.position + new Vector3(0, 5.0f, 0);
         Vector3 direction = new Vector3(Input.GetAxis("RightHorizontal"), 0, Input.GetAxis("RightVertical"));
 
+        float angle = (float)Mathf.Atan2(direction.z, direction.x);
+        Debug.Log(angle);
+
+
         RaycastHit hit;
 
         if(Physics.Raycast(origin, direction * 200.0f, out hit)) {
@@ -108,13 +112,23 @@ public class MapWalkState : BaseGameState {
 
             ShootProjectile(origin, hit.point, target);
         } else {
-            //ShootProjectile(origin, origin + direction, null);
+            //float angle = (float)Mathf.Atan2(direction.z, direction.x);
+
+            //Debug.Log(angle);
+
+            //float radius = 100.0f;
+            //Vector3 target = new Vector3(radius * (float)Mathf.Cos(angle), 0, radius * (float)Mathf.Sin(angle));
+
+            //Debug.DrawLine(origin, target, Color.green, 1000.0f);
+
+            //ShootProjectile(origin, target, null);
         }
     }
 
     private void ShootProjectile(Vector3 from, Vector3 to, GameObject target) {
         GameObject arrowView = UnityUtils.LoadResource<GameObject>("Prefabs/ArrowView", true);
         arrowView.transform.position = from;
+        arrowView.transform.LookAt(to);
 
         TweenParms parms = new TweenParms();
         parms.Prop("position", to);
