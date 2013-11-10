@@ -113,6 +113,8 @@ public class MpClient
 		if (cid == "identity") {
 			Identity = parts.Pop();
 			Debug.Log(string.Format("[MpClient] Now identity {0}", Identity));
+		} else if (cid == Identity) {
+			/* ignore stuff about us, we already know yo */
 		} else {
 			string cmd = parts.Pop ();
 			if (cmd == "position") {

@@ -20,7 +20,11 @@ class Client < EventMachine::Connection
       data = line.split(' ')
       cmd = (data.shift || '').gsub('-', '_').downcase
       if cmd && respond_to?("on_#{cmd}")
-        send("on_#{cmd}", *data)
+        begin
+          send("on_#{cmd}", *data)
+        rescue ArgumentError => e
+          puts e.message
+        end
       else
         reply "error what?"
       end
