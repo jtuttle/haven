@@ -106,10 +106,8 @@ public class MapWalkState : BaseGameState {
                 target.collider.enabled = false;
 
             ShootProjectile(origin, hit.point, target);
-            //hit.collider.gameObject.transform.position += new Vector3(0, 1.0f, 0);
         } else {
-            Debug.Log("NO");
-            // show a dummy arrow?
+            //ShootProjectile(origin, origin + direction, null);
         }
     }
 
@@ -135,7 +133,7 @@ public class MapWalkState : BaseGameState {
 
         GameObject.Destroy(arrowView);
 
-        if(target.tag == "Enemy")
+        if(target != null && target.tag == "Enemy")
             _enemySpawner.DestroyEnemy(target.GetComponent<EnemyView>());
     }
 }
