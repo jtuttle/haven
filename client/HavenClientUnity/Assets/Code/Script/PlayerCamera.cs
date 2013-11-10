@@ -9,8 +9,8 @@ public class PlayerCamera : MonoBehaviour {
     public float _angle;
 
     public void Start() {
-        Distance = 100.0f;
-        Height = 100.0f;
+        Distance = 50.0f;
+        Height = 50.0f;
         _angle = -(Mathf.PI / 2);
 
         GameManager.Instance.Input.OnCameraInput += OnCameraInput;
