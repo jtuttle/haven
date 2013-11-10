@@ -6,7 +6,7 @@ public class MapWalkState : BaseGameState {
     private PlayerView _playerView;
     private MapView _mapView;
 
-    private EnemyController _enemyController;
+    private EnemySpawner _enemySpawner;
 
     public MapWalkState() 
         : base(GameStates.MapWalk) {
@@ -14,7 +14,7 @@ public class MapWalkState : BaseGameState {
         _playerView = GameManager.Instance.PlayerView;
         _mapView = GameManager.Instance.MapView;
 
-        _enemyController = new EnemyController(1000.0f);
+        _enemySpawner = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>();
     }
 
     public override void EnterState() {
@@ -23,7 +23,7 @@ public class MapWalkState : BaseGameState {
         GameManager.Instance.Input.OnAxialInput += OnAxialInput;
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress += OnConfirmPress;
 
-        _enemyController.Start();
+        _enemySpawner.Start();
     }
 
     public override void ExitState() {
