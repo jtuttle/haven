@@ -82,14 +82,11 @@ public class MpClient
                 }
                 if (!ContinueRunning) { return; }
                 int read = Stream.EndRead(ar);
-				Debug.Log(string.Format("[MpClient] Read {0} bytes", read));
                 string decoded = Encoding.ASCII.GetString(buff, 0, read);
-				Debug.Log(string.Format ("[MpClient] Decoded chunk: {0}", decoded));
                 accum += decoded;
                 while (accum.Contains("\n"))
                 {
                     string nextLine = accum.Substring(0, accum.IndexOf("\n"));
-					Debug.Log (string.Format("[MpClient] Next line: {0}", nextLine));
                     accum = accum.Substring(accum.IndexOf("\n") + 1);
                     ParseAndDoleOut(nextLine);
                 }
