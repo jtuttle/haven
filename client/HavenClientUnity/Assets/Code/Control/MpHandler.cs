@@ -8,6 +8,7 @@ public class MpHandler
 	private List<Action> DelegatedWork { get; set; }
 	
 	public Dictionary<string, OtherPlayer> OtherPlayers { get; private set; }
+	private Vector3 LastPositionSent = new Vector3(0,0,0);
 	
 	public MpHandler (MpClient client)
 	{		
@@ -38,6 +39,17 @@ public class MpHandler
 			op.Actor = UnityUtils.LoadResource<GameObject>("Prefabs/OtherPlayer", true);
 		});
     }
+	
+	public void PlayerMoved()
+	{
+		Vector3 pos = GameManager.Instance.PlayerView.transform.position;
+		if (pos.x != LastPositionSent.x ||
+			pos.y != LastPositionSent.y ||
+			pos.z != LastPositionSent.z) {
+			Client.SendPosition(pos.x, pos.y, pos.z);			
+			LastPositionSent = new Vector3(pos.x, pos.y, pos.z);
+		}
+	}
 	
 	public void DoDelegatedWork()
 	{
