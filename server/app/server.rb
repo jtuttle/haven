@@ -18,13 +18,13 @@ class Server
     clients << client
     client.send_data("identity #{client.id}\n")
     broadcast "#{client.id} join"
-    log :server, "New client #{client.id}"
+    log :server, "New client #{client.id}, now #{clients.size} clients"
   end
 
   def unregister(client)
     clients.delete(client)
     broadcast "#{client.id} drop"
-    log :server, "Client disconnected #{client.id}"
+    log :server, "Client disconnected #{client.id}, now #{clients.size} clients"
   end
 
   def broadcast(data)
