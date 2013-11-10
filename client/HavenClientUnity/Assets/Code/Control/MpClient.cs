@@ -33,6 +33,10 @@ public class MpClient
 	
 	public void Start()
 	{
+		if (!GameConfig.MpEnabled) {
+			return;
+		}
+		
 		Client = new TcpClient();
 		Client.Connect(Host, Port);
 		Stream = Client.GetStream();
@@ -43,12 +47,19 @@ public class MpClient
 	
 	public void Stop()
 	{
+		if (!GameConfig.MpEnabled) {
+			return;
+		}
+		
 		ContinueRunning = false;
 		ReadThread.Join();
 	}
 	
 	public void Restart()
 	{
+		if (!GameConfig.MpEnabled) {
+			return;
+		}
 		Stop ();
 		Start ();
 	}
@@ -59,6 +70,10 @@ public class MpClient
 	
 	public void Send(params object[] p)
     {
+		if (!GameConfig.MpEnabled) {
+			return;
+		}
+		
         string msg = "";
 		foreach (object o in p) {
 			if (msg.Length > 0) { msg += " "; }
@@ -75,7 +90,9 @@ public class MpClient
 			Restart();
 		}
 		catch (Exception ex) {
-			Debug.LogError (string.Format ("[MpClient] Unhandled exception in MpClient.Send of type {0}: {1}", ex.GetType ().Name, ex.Message));
+			MpUtils.Log (MpUtils.LogLevel.Error, "MpClient",
+				"Unhandled exception in MpClient.Send of type {0}: {1}",
+				ex.GetType ().Name, ex.Message);
 		}
     }
 	
@@ -84,7 +101,7 @@ public class MpClient
 		string accum = "";
 		byte[] buff = new byte[512];
 		
-		Debug.LogWarning(string.Format("[MpClient] Now reading from connection"));
+		MpUtils.Log (MpUtils.LogLevel.Warning, "MpClient", "Now reading from connection");
 		while (ContinueRunning)
 		{
 			try
@@ -107,12 +124,14 @@ public class MpClient
 			}
 			catch (System.IO.IOException)
 			{
-				Debug.LogWarning(string.Format("[MpClient] Connection broken, no longer read"));
+				MpUtils.Log (MpUtils.LogLevel.Warning, "MpClient", "Connection broken, no longer reading");
 				ContinueRunning = false;
 			}
 			catch (Exception ex)
 			{
-				Debug.LogError (string.Format ("[MpClient] Unhandled exception in MpClient.ReadSync of type {0}: {1}", ex.GetType().Name, ex.Message));
+				MpUtils.Log (MpUtils.LogLevel.Error, "MpClient",
+					"Unhandled exception in MpClient.ReadSync of type {0}: {1}",
+					ex.GetType().Name, ex.Message);
 				ContinueRunning = false;
 			}
 		}
@@ -128,9 +147,11 @@ public class MpClient
 		string cid = parts.Pop ();
 		if (cid == "identity") {
 			Identity = parts.Pop();
-			Debug.Log(string.Format("[MpClient] Now identity {0}", Identity));
+			MpUtils.Log(MpUtils.LogLevel.Info, "MpClient",
+				"[MpClient] Now identity {0}", Identity);
 		} else if (cid == "error") {
-			Debug.LogWarning(string.Format("[MpClient] Server sent error: {0}", feed));
+			MpUtils.Log (MpUtils.LogLevel.Warning, "MpClient",
+				"[MpClient] Server sent error: {0}", feed);
 		} else if (cid == Identity) {
 			/* ignore stuff about us, we already know yo */
 		} else {
@@ -151,7 +172,8 @@ public class MpClient
 					OnSomeoneDropped(cid);
 				}
 			} else {
-				Debug.LogError(string.Format("No handler for cmd {0} on cid {1}", cmd, cid));
+				MpUtils.Log(MpUtils.LogLevel.Error, "MpClient",
+					"No handler for cmd {0} on cid {1}", cmd, cid);
 			}
 		}
 	}
