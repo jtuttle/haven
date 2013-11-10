@@ -1,0 +1,3 @@
+#!/bin/bash
+pid=`ps -ef | grep havenserver | grep -v grep | sed "s/  */ /g" | cut -d ' ' -f 2`
+kill $pid
