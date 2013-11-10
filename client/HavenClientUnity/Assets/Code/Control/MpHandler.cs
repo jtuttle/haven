@@ -17,6 +17,7 @@ public class MpHandler
 		
 		Client = client;
 		Client.OnSomeoneJoined += SomeoneJoined;
+		Client.OnSomeoneDropped += SomeoneDropped;;
 		Client.OnPositionUpdate += PositionUpdate;
 	}
 
@@ -34,13 +35,25 @@ public class MpHandler
     {
 		if (!OtherPlayers.ContainsKey (cid)) {
 			DelegateWork(() => {
-				Debug.Log (string.Format("[GameManager] Someone joined {0}, now {1} other players", cid, OtherPlayers.Count));
 				OtherPlayer op = new OtherPlayer(cid);
 		    	OtherPlayers[cid] = op;
 				op.Actor = UnityUtils.LoadResource<GameObject>("Prefabs/OtherPlayer", true);
+				Debug.Log (string.Format("[MpHandler] Someone joined {0}, now {1} other players", cid, OtherPlayers.Count));
 			});
 		}
     }
+	
+	private void SomeoneDropped(string cid)
+	{
+		if (OtherPlayers.ContainsKey(cid)) {
+			DelegateWork (() => {
+				OtherPlayer op = OtherPlayers[cid];
+				GameObject.Destroy(op.Actor);
+				OtherPlayers.Remove(cid);
+				Debug.Log (string.Format("[MpHandler] Someone dropped out, was {0}", cid));
+			});
+		}
+	}
 	
 	public void PlayerMoved()
 	{
