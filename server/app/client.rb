@@ -36,12 +36,10 @@ class Client < EventMachine::Connection
   end
 
   def broadcast(*args)
-    log "client-#{id}", "broadcast: #{args.join(' ')}"
     server.broadcast(*args)
   end
 
   def reply(*args)
-    log "client-#{id}", "sent: #{args.join(' ')}"
     msg = args.join(' ')
     msg += "\n" unless msg.end_with?("\n")
     send_data(msg)
