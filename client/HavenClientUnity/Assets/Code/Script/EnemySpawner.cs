@@ -41,4 +41,9 @@ public class EnemySpawner : MonoBehaviour {
 
         _enemies.Add(enemyView);
     }
+
+    public void DestroyEnemy(EnemyView enemy) {
+        _enemies.Remove(enemy);
+        GameObject.Destroy(enemy.gameObject);
+    }
 }

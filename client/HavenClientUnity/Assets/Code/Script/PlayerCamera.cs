@@ -34,7 +34,6 @@ public class PlayerCamera : MonoBehaviour {
 	}
 
     private void OnCameraInput(float h) {
-        Debug.Log(h);
         _angle += h * 0.05f;
     }
 }
