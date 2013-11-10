@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 using Holoville.HOTween;
 
 public class MapWalkState : BaseGameState {
@@ -92,14 +90,8 @@ public class MapWalkState : BaseGameState {
     }
 
     private void OnTriggerRightInput() {
-        //ShootProjectile();
-
         Vector3 origin = _playerView.transform.position + new Vector3(0, 5.0f, 0);
         Vector3 direction = new Vector3(Input.GetAxis("RightHorizontal"), 0, Input.GetAxis("RightVertical"));
-
-        float angle = (float)Mathf.Atan2(direction.z, direction.x);
-        Debug.Log(angle);
-
 
         RaycastHit hit;
 
@@ -112,16 +104,12 @@ public class MapWalkState : BaseGameState {
 
             ShootProjectile(origin, hit.point, target);
         } else {
-            //float angle = (float)Mathf.Atan2(direction.z, direction.x);
+            float angle = (float)Mathf.Atan2(direction.z, direction.x);
 
-            //Debug.Log(angle);
+            float radius = 100.0f;
+            Vector3 target = origin + new Vector3(radius * (float)Mathf.Cos(angle), 0, radius * (float)Mathf.Sin(angle));
 
-            //float radius = 100.0f;
-            //Vector3 target = new Vector3(radius * (float)Mathf.Cos(angle), 0, radius * (float)Mathf.Sin(angle));
-
-            //Debug.DrawLine(origin, target, Color.green, 1000.0f);
-
-            //ShootProjectile(origin, target, null);
+            ShootProjectile(origin, target, null);
         }
     }
 
@@ -138,7 +126,7 @@ public class MapWalkState : BaseGameState {
         float velocity = 200.0f;
         float distance = Vector3.Distance(from, to);
         float time = distance / velocity;
-
+        
         HOTween.To(arrowView.transform, time, parms);
     }
 
