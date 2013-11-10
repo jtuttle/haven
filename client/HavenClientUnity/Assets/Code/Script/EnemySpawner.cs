@@ -22,7 +22,7 @@ public class EnemySpawner : MonoBehaviour {
     }
 
     public void Start() {
-        _enemyTimer.StartTimer();
+        //_enemyTimer.StartTimer();
     }
 
     private void SpawnEnemy(TimeKeeper timer) {
