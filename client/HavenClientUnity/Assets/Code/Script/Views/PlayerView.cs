@@ -76,10 +76,8 @@ public class PlayerView : MonoBehaviour {
     private void TweenToWallHeight(WallPieceView wallPieceView) {
         Vector3 pos = transform.position;
 
-        float targetY = wallPieceView.transform.position.y + (wallPieceView.transform.localScale.y / 2);// -(transform.localScale.y / 2);
-
         TweenParms parms = new TweenParms();
-        parms.Prop("position", new Vector3(pos.x, targetY, pos.z));
+        parms.Prop("position", new Vector3(pos.x, wallPieceView.Height, pos.z));
         parms.Ease(EaseType.Linear);
         parms.OnComplete(OnTweenToWallHeightComplete, wallPieceView.transform.position);
 
@@ -117,9 +115,7 @@ public class PlayerView : MonoBehaviour {
     }
 
     private void TweenOffWall(WallPieceView wallPieceView, Vector3 direction) {
-        float wallPieceScaleY = wallPieceView.transform.localScale.y;
-
-        Vector3 target = (wallPieceView.transform.position + new Vector3(0, wallPieceScaleY / 2, 0)) + (direction * GameConfig.BLOCK_SIZE) * (0.75f);
+        Vector3 target = (wallPieceView.transform.position + new Vector3(0, wallPieceView.Height, 0)) + (direction * GameConfig.BLOCK_SIZE) * (0.75f);
 
         Vector3 aboveGroundPos = wallPieceView.transform.position + (direction * GameConfig.BLOCK_SIZE);
         Vector3 groundPos = new Vector3(aboveGroundPos.x, 0, aboveGroundPos.z);
