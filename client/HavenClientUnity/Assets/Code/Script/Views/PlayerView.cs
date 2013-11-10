@@ -53,7 +53,7 @@ public class PlayerView : MonoBehaviour {
             */
         }
 
-        rigidbody.velocity = velocity * 100.0f;
+        rigidbody.velocity = velocity * 50.0f;
     }
 
     private void SnapToWall(Wall wall, bool h, bool v) {

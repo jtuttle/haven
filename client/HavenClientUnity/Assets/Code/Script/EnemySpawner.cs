@@ -26,7 +26,9 @@ public class EnemySpawner : MonoBehaviour {
     }
 
     private void SpawnEnemy(TimeKeeper timer) {
-        EnemyView enemyView = UnityUtils.LoadResource<GameObject>("Prefabs/SwarmerView", true).GetComponent<EnemyView>();
+        string enemyPrefab = (Random.Range(0, 1.0f) < 0.2f ? "GoreSuckerView" : "SwarmerView");
+
+        EnemyView enemyView = UnityUtils.LoadResource<GameObject>("Prefabs/" + enemyPrefab, true).GetComponent<EnemyView>();
 
         Follow ai = enemyView.gameObject.GetComponent<Follow>();
         ai.Target = GameManager.Instance.PlayerView.transform;
@@ -36,7 +38,7 @@ public class EnemySpawner : MonoBehaviour {
         float z = SpawnRadius * Mathf.Sin(angle);
 
         enemyView.transform.position = new Vector3(x, 0, z);
-        enemyView.transform.localScale *= 2.0f;
+        //enemyView.transform.localScale *= 2.0f;
         enemyView.transform.parent = transform;
 
         _enemies.Add(enemyView);
