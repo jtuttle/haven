@@ -50,6 +50,13 @@ public class MapWalkState : BaseGameState {
     }
 
     private void OnConfirmPress() {
+        if(_playerView.Dead) {
+            _playerView.gameObject.transform.position = Vector3.zero;
+            _playerView.Resurrect();
+
+            return;
+        } 
+
         WallPieceView touchedPiece = _mapView.WallView.GetTouchedPiece();
 
         if(!_playerView.Model.OnWall) {
@@ -90,6 +97,8 @@ public class MapWalkState : BaseGameState {
     }
 
     private void OnTriggerRightInput() {
+        if(_playerView.Dead) return;
+
         Vector3 arrowOrigin = _playerView.transform.position + new Vector3(0, 5.0f, 0);
         Vector3 rayOrigin = new Vector3(arrowOrigin.x, 5.0f, arrowOrigin.z);
         Vector3 direction = new Vector3(Input.GetAxis("RightHorizontal"), 0, Input.GetAxis("RightVertical"));

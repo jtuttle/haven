@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class WallPieceView : MonoBehaviour {
-    public bool Touching;
+    public bool Touching { get; private set; }
 
     public float Height { get { return (collider as BoxCollider).size.y * transform.localScale.y; } }
 

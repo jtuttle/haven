@@ -15,6 +15,7 @@ public class MapEnterState : BaseGameState {
 
         CreateMap();
         PlacePlayer();
+        AddTrees();
 
         ExitState();
     }
@@ -44,5 +45,9 @@ public class MapEnterState : BaseGameState {
 
         GameManager.Instance.PlayerView = playerView;
         GameManager.Instance.PlayerCamera.Target = playerView.gameObject;
+    }
+
+    private void AddTrees() {
+        // TODO
     }
 }
