@@ -129,6 +129,8 @@ public class MpClient
 		if (cid == "identity") {
 			Identity = parts.Pop();
 			Debug.Log(string.Format("[MpClient] Now identity {0}", Identity));
+		} else if (cid == "error") {
+			Debug.LogWarning(string.Format("[MpClient] Server sent error: {0}", feed));
 		} else if (cid == Identity) {
 			/* ignore stuff about us, we already know yo */
 		} else {
