@@ -19,9 +19,20 @@ public class PlayerView : MonoBehaviour {
         if(_tweening) return;
 
         Vector3 forward = camera.transform.forward;
-        Vector3 velocity = (camera.transform.right * h + new Vector3(forward.x, 0, forward.z) * v) * 100.0f;
+        Vector3 velocity = (camera.transform.right * h + new Vector3(forward.x, 0, forward.z) * v);
 
         if(Model.OnWall) {
+            Vector3 pos = transform.position;
+
+            WallView wallView = GameManager.Instance.MapView.WallView;
+
+            if(!wallView.OnWall(pos + new Vector3(velocity.x, 0, 0)))
+                velocity = new Vector3(0, velocity.y, velocity.z);
+
+            if(!wallView.OnWall(pos + new Vector3(0, 0, velocity.z)))
+                velocity = new Vector3(velocity.x, velocity.y, 0);
+
+            /*
             XY worldCoord = new XY((int)transform.position.x, (int)transform.position.z);
             XY mapCoord = GameManager.Instance.MapView.GetMapCoordFromWorldCoord(worldCoord);
 
@@ -38,9 +49,10 @@ public class PlayerView : MonoBehaviour {
 
             if(vert && !hori || (velocity.x < 0 && transform.position.x == -wallBound) || (velocity.x > 0 && transform.position.x == wallBound))
                 velocity = new Vector3(0, velocity.y, velocity.z);
+            */
         }
 
-        rigidbody.velocity = velocity;
+        rigidbody.velocity = velocity * 100.0f;
     }
 
     private void SnapToWall(Wall wall, bool h, bool v) {

@@ -60,13 +60,17 @@ public class MapWalkState : BaseGameState {
                 float h = Input.GetAxis("Horizontal");
                 float v = Input.GetAxis("Vertical");
 
-                if(onCorner && (v != 0 || h != 0)) {
+                Camera camera = GameManager.Instance.PlayerCamera.camera;
+                Vector3 forward = camera.transform.forward;
+                Vector3 direction = camera.transform.right * h + new Vector3(forward.x, 0, forward.z) * v;
+
+                if(onCorner && (direction.z != 0 || direction.x != 0)) {
                     //bool outside 
                     //_playerView.DoDescendWallTween(touchedPiece, (pos.z > 0 && v > 0) || (pos.z < 0 && v < 0));
-                } else if(onHori && v != 0) {
-                    DescendFromWall(touchedPiece, new Vector3(0, 0, v < 0 ? -1 : 1));
-                } else if(onVert && h != 0) {
-                    DescendFromWall(touchedPiece, new Vector3(h < 0 ? -1 : 1, 0, 0));
+                } else if(onHori && direction.z != 0) {
+                    DescendFromWall(touchedPiece, new Vector3(0, 0, direction.z < 0 ? -1 : 1));
+                } else if(onVert && direction.x != 0) {
+                    DescendFromWall(touchedPiece, new Vector3(direction.x < 0 ? -1 : 1, 0, 0));
                 }
             }
         }
