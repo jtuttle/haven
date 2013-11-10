@@ -4,6 +4,8 @@ using System.Collections;
 public class WallPieceView : MonoBehaviour {
     public bool Touching;
 
+    public float Height { get { return (collider as BoxCollider).size.y * transform.localScale.y; } }
+
     public void Awake() {
         Touching = false;
     }

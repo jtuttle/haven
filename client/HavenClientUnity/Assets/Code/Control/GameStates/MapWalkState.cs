@@ -90,26 +90,27 @@ public class MapWalkState : BaseGameState {
     }
 
     private void OnTriggerRightInput() {
-        Vector3 origin = _playerView.transform.position + new Vector3(0, 5.0f, 0);
+        Vector3 arrowOrigin = _playerView.transform.position + new Vector3(0, 5.0f, 0);
+        Vector3 rayOrigin = new Vector3(arrowOrigin.x, 5.0f, arrowOrigin.z);
         Vector3 direction = new Vector3(Input.GetAxis("RightHorizontal"), 0, Input.GetAxis("RightVertical"));
 
         RaycastHit hit;
 
-        if(Physics.Raycast(origin, direction * 200.0f, out hit)) {
+        if(Physics.Raycast(rayOrigin, direction * 200.0f, out hit)) {
             GameObject target = hit.collider.gameObject;
 
             // remove enemy from collisions to avoid double shot
             if(target.tag == "Enemy")
                 target.collider.enabled = false;
 
-            ShootProjectile(origin, hit.point, target);
+            ShootProjectile(arrowOrigin, hit.point, target);
         } else {
             float angle = (float)Mathf.Atan2(direction.z, direction.x);
 
             float radius = 100.0f;
-            Vector3 target = origin + new Vector3(radius * (float)Mathf.Cos(angle), 0, radius * (float)Mathf.Sin(angle));
+            Vector3 target = rayOrigin + new Vector3(radius * (float)Mathf.Cos(angle), 0, radius * (float)Mathf.Sin(angle));
 
-            ShootProjectile(origin, target, null);
+            ShootProjectile(arrowOrigin, target, null);
         }
     }
 
