@@ -47,6 +47,12 @@ public class MpClient
 		ReadThread.Join();
 	}
 	
+	public void Restart()
+	{
+		Stop ();
+		Start ();
+	}
+	
 	public void SendPosition(float px, float py, float pz) {
 		Send ("set-position", px, py, pz);
 	}
@@ -62,8 +68,15 @@ public class MpClient
             msg += "\n";
         }
         byte[] encoded = Encoding.ASCII.GetBytes(msg);
-        Stream.Write(encoded, 0, encoded.Length);
-        Stream.Flush();
+		try {
+        	Stream.Write(encoded, 0, encoded.Length);
+        	Stream.Flush();
+		} catch (System.IO.IOException) {
+			Restart();
+		}
+		catch (Exception ex) {
+			Debug.LogError (string.Format ("[MpClient] Unhandled exception in MpClient.Send of type {0}: {1}", ex.GetType ().Name, ex.Message));
+		}
     }
 	
 	private void ReadSync()
@@ -71,6 +84,7 @@ public class MpClient
 		string accum = "";
 		byte[] buff = new byte[512];
 		
+		Debug.LogWarning(string.Format("[MpClient] Now reading from connection"));
 		while (ContinueRunning)
 		{
 			try
@@ -91,9 +105,14 @@ public class MpClient
                     ParseAndDoleOut(nextLine);
                 }
 			}
-			catch (Exception e)
+			catch (System.IO.IOException)
 			{
-				Debug.LogError(e.Message);
+				Debug.LogWarning(string.Format("[MpClient] Connection broken, no longer read"));
+				ContinueRunning = false;
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError (string.Format ("[MpClient] Unhandled exception in MpClient.ReadSync of type {0}: {1}", ex.GetType().Name, ex.Message));
 				ContinueRunning = false;
 			}
 		}
