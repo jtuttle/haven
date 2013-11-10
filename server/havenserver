@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+Root = File.dirname(__FILE__)
+require "eventmachine"
+require "hashie"
+require "#{Root}/app/log_helper.rb"
+require "#{Root}/app/client.rb"
+require "#{Root}/app/server.rb"
+
+Srv = Server.new
+Srv.run

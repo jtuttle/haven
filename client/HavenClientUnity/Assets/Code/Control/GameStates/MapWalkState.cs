@@ -48,6 +48,7 @@ public class MapWalkState : BaseGameState {
 
     private void OnAxialLeftInput(float h, float v) {
         _playerView.Move(h, v, GameManager.Instance.PlayerCamera.camera);
+		GameManager.Instance.Multiplayer.PlayerMoved();
     }
 
     private void OnConfirmPress() {
