@@ -5,7 +5,7 @@ public class MapWalkState : BaseGameState {
     private PlayerView _playerView;
     private MapView _mapView;
 
-    private EnemySpawner _enemySpawner;
+    private EnemyController _enemyController;
 
     public MapWalkState() 
         : base(GameStates.MapWalk) {
@@ -13,7 +13,7 @@ public class MapWalkState : BaseGameState {
         _playerView = GameManager.Instance.PlayerView;
         _mapView = GameManager.Instance.MapView;
 
-        _enemySpawner = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>();
+        _enemyController = GameObject.Find("EnemyController").GetComponent<EnemyController>();
     }
 
     public override void EnterState() {
@@ -23,7 +23,7 @@ public class MapWalkState : BaseGameState {
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress += OnConfirmPress;
         GameManager.Instance.Input.OnTriggerRightInput += OnTriggerRightInput;
 
-        _enemySpawner.Start();
+        _enemyController.Start();
     }
 
     public override void ExitState() {
@@ -112,41 +112,14 @@ public class MapWalkState : BaseGameState {
             if(target.tag == "Enemy")
                 target.collider.enabled = false;
 
-            ShootProjectile(arrowOrigin, hit.point, target);
+            _playerView.ShootProjectile(arrowOrigin, hit.point, target);
         } else {
             float angle = (float)Mathf.Atan2(direction.z, direction.x);
 
             float radius = 100.0f;
             Vector3 target = rayOrigin + new Vector3(radius * (float)Mathf.Cos(angle), 0, radius * (float)Mathf.Sin(angle));
 
-            ShootProjectile(arrowOrigin, target, null);
+            _playerView.ShootProjectile(arrowOrigin, target, null);
         }
-    }
-
-    private void ShootProjectile(Vector3 from, Vector3 to, GameObject target) {
-        GameObject arrowView = UnityUtils.LoadResource<GameObject>("Prefabs/ArrowView", true);
-        arrowView.transform.position = from;
-        arrowView.transform.LookAt(to);
-
-        TweenParms parms = new TweenParms();
-        parms.Prop("position", to);
-        parms.Ease(EaseType.Linear);
-        parms.OnComplete(OnShootProjectileComplete, arrowView, target);
-
-        float velocity = 200.0f;
-        float distance = Vector3.Distance(from, to);
-        float time = distance / velocity;
-        
-        HOTween.To(arrowView.transform, time, parms);
-    }
-
-    private void OnShootProjectileComplete(TweenEvent e) {
-        GameObject arrowView = (GameObject)e.parms[0];
-        GameObject target = (GameObject)e.parms[1];
-
-        GameObject.Destroy(arrowView);
-
-        if(target != null && target.tag == "Enemy")
-            _enemySpawner.DestroyEnemy(target.GetComponent<EnemyView>());
     }
 }

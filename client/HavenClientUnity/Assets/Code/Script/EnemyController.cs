@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemySpawner : MonoBehaviour {
+public class EnemyController : MonoBehaviour {
     private List<EnemyView> _enemies;
     private TimeKeeper _enemyTimer;
 
@@ -28,15 +28,12 @@ public class EnemySpawner : MonoBehaviour {
     private void SpawnEnemy(TimeKeeper timer) {
         if(_enemies.Count >= _spawnMax) return;
 
-        float rnd = Random.Range(0, 1.0f);
-
-        string enemyPrefab = (rnd < 0.2f ? "GoreSuckerView" : "SwarmerView");
-        float vMax = (rnd < 0.2f ? 20.0f : 30.0f);
+        string enemyPrefab = (Random.Range(0, 1.0f) < 0.2f ? "GoreSuckerView" : "SwarmerView");
 
         EnemyView enemyView = UnityUtils.LoadResource<GameObject>("Prefabs/" + enemyPrefab, true).GetComponent<EnemyView>();
+        enemyView.OnEnemyDie += OnEnemyDie;
 
         Follow ai = enemyView.gameObject.GetComponent<Follow>();
-        ai.VelocityMax = vMax;
         ai.Target = GameManager.Instance.PlayerView.transform;
 
         float angle = Random.Range(0, 2 * Mathf.PI);
@@ -49,7 +46,7 @@ public class EnemySpawner : MonoBehaviour {
         _enemies.Add(enemyView);
     }
 
-    public void DestroyEnemy(EnemyView enemy) {
+    private void OnEnemyDie(EnemyView enemy) {
         _enemies.Remove(enemy);
         GameObject.Destroy(enemy.gameObject);
     }

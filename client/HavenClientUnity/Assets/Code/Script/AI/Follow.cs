@@ -6,14 +6,12 @@ public class Follow : MonoBehaviour {
     public Transform Target;
 
     private float _velocity;
-    public float VelocityMax;
+    public float VelocityMax; // set through inspector
     private float _acceleration;
     private float _accelerationMax = 10.0f;
     private float _jerk = 2.0f;
 
     public void Awake() {
-        VelocityMax = 40.0f; // default
-
         _velocity = VelocityMax;
         _acceleration = _accelerationMax;
     }
