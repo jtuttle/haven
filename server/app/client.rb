@@ -16,7 +16,6 @@ class Client < EventMachine::Connection
 
   def receive_data(rawdata)
     rawdata.split("\n").each do |line|
-      log :debug, "[#{id}] received: #{line}"
       data = line.split(' ')
       cmd = (data.shift || '').gsub('-', '_').downcase
       if cmd && respond_to?("on_#{cmd}")
