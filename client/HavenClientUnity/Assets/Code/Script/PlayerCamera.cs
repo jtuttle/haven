@@ -9,15 +9,15 @@ public class PlayerCamera : MonoBehaviour {
     public float _angle;
 
     public void Start() {
-        Distance = 100.0f;
-        Height = 100.0f;
-        _angle = 0;
+        Distance = 50.0f;
+        Height = 50.0f;
+        _angle = -(Mathf.PI / 2);
 
-        GameManager.Instance.Input.OnCameraInput += OnCameraInput;
+        //GameManager.Instance.Input.OnCameraInput += OnCameraInput;
     }
 
     public void Destroy() {
-        GameManager.Instance.Input.OnCameraInput -= OnCameraInput;
+        //GameManager.Instance.Input.OnCameraInput -= OnCameraInput;
     }
 
 	// Update is called once per frame
@@ -28,12 +28,13 @@ public class PlayerCamera : MonoBehaviour {
 
             Vector3 playerPos = Target.transform.position;
 
-            transform.position = new Vector3(playerPos.x + x, Height, playerPos.z + z);
+            transform.position = new Vector3(playerPos.x + x, playerPos.y + Height, playerPos.z + z);
             transform.LookAt(Target.transform.position);
         }
 	}
 
     private void OnCameraInput(float h) {
+        Debug.Log(h);
         _angle += h * 0.05f;
     }
 }
