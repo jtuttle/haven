@@ -4,6 +4,7 @@ using Holoville.HOTween;
 
 public class PlayerView : MonoBehaviour {
     public Player Model { get; private set; }
+    public bool Dead { get; private set; }
 
     private bool _tweening;
 
@@ -16,7 +17,7 @@ public class PlayerView : MonoBehaviour {
     }
 
     public void Move(float h, float v, Camera camera) {
-        if(_tweening) return;
+        if(_tweening && !Dead) return;
 
         Vector3 forward = camera.transform.forward;
         Vector3 velocity = (camera.transform.right * h + new Vector3(forward.x, 0, forward.z) * v);
@@ -62,6 +63,36 @@ public class PlayerView : MonoBehaviour {
         float wallZ = (wall.Radius * GameConfig.BLOCK_SIZE) * (pos.z < 0 ? -1 : 1);
 
         gameObject.transform.position = new Vector3(v ? wallX : pos.x, pos.y, h ? wallZ : pos.z);
+    }
+
+    public void OnCollisionEnter(Collision collision) {
+        if(collision.gameObject.tag == "Enemy")
+            Die();
+    }
+
+    private void Die() {
+        MakeBlood();
+        
+        gameObject.SetActive(false);
+        Dead = true;
+    }
+
+    private void MakeBlood() {
+        for(int i = 0; i < 8; i++) {
+            GameObject blood = UnityUtils.LoadResource<GameObject>("Prefabs/BloodView", true);
+
+            Vector2 adjust = Vector2.zero;
+
+            if(i > 0)
+                adjust = Random.insideUnitCircle * 10.0f;
+
+            blood.transform.position = transform.position + new Vector3(adjust.x, 0.05f, adjust.y);
+        }
+    }
+
+    public void Resurrect() {
+        gameObject.SetActive(true);
+        Dead = false;
     }
 
     public void DoAscendWallTween(WallPieceView wallPieceView) {

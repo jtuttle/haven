@@ -6,13 +6,15 @@ public class Follow : MonoBehaviour {
     public Transform Target;
 
     private float _velocity;
-    private float _velocityMax = 40.0f;
+    public float VelocityMax;
     private float _acceleration;
     private float _accelerationMax = 10.0f;
     private float _jerk = 2.0f;
 
     public void Awake() {
-        _velocity = _velocityMax;
+        VelocityMax = 40.0f; // default
+
+        _velocity = VelocityMax;
         _acceleration = _accelerationMax;
     }
 
@@ -20,7 +22,7 @@ public class Follow : MonoBehaviour {
         if(Target == null) return;
 
         _acceleration = Mathf.Min(_acceleration + _jerk, _accelerationMax);
-        _velocity = Mathf.Min(_velocity + _acceleration, _velocityMax);
+        _velocity = Mathf.Min(_velocity + _acceleration, VelocityMax);
 
         float angle = AngleToTarget();
         float vx = Mathf.Cos(angle) * _velocity;
