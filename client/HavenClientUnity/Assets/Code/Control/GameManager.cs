@@ -25,11 +25,13 @@ public class GameManager : UnitySingleton<GameManager> {
         _states = new GameStateMachine();
 
         _inputManager = GetComponent<InputManager>();
-		
+
+		/*
 		Client = new MpClient();
 		Client.Host = GameConfig.MpHost;
 		Client.Port = GameConfig.MpPort;
 		Multiplayer = new MpHandler(Client);
+		*/
     }
 
     public void Start() {
@@ -37,13 +39,13 @@ public class GameManager : UnitySingleton<GameManager> {
 
         _states.ChangeGameState(new MapEnterState());
 		
-		Client.Start();
+		//Client.Start();
     }
 
     public void Update() {
         if(_states.CurrentState != null)
             _states.CurrentState.Update();
-		Multiplayer.DoDelegatedWork();
+		//Multiplayer.DoDelegatedWork();
     }
 
     private void OnExitState(BaseGameState state) {
