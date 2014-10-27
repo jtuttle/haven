@@ -21,7 +21,9 @@ public class MapWalkState : BaseGameState {
 
         GameManager.Instance.Input.OnAxialLeftInput += OnAxialLeftInput;
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress += OnConfirmPress;
-        GameManager.Instance.Input.OnTriggerRightInput += OnTriggerRightInput;
+
+        //GameManager.Instance.Input.OnTriggerRightInput += OnTriggerRightInput;
+		GameManager.Instance.Input.GetButton(ButtonId.Special).OnPress += OnTriggerRightInput;
 
         _enemyController.Start();
     }
@@ -29,7 +31,9 @@ public class MapWalkState : BaseGameState {
     public override void ExitState() {
         GameManager.Instance.Input.OnAxialLeftInput -= OnAxialLeftInput;
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress -= OnConfirmPress;
-        GameManager.Instance.Input.OnTriggerRightInput -= OnTriggerRightInput;
+
+        //GameManager.Instance.Input.OnTriggerRightInput -= OnTriggerRightInput;
+		GameManager.Instance.Input.GetButton(ButtonId.Special).OnPress -= OnTriggerRightInput;
 
         base.ExitState();
     }
@@ -46,7 +50,8 @@ public class MapWalkState : BaseGameState {
 
     private void OnAxialLeftInput(float h, float v) {
         _playerView.Move(h, v, GameManager.Instance.PlayerCamera.camera);
-		GameManager.Instance.Multiplayer.PlayerMoved();
+
+		//GameManager.Instance.Multiplayer.PlayerMoved();
     }
 
     private void OnConfirmPress() {
