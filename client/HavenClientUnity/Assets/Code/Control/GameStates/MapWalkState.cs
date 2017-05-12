@@ -23,7 +23,8 @@ public class MapWalkState : BaseGameState {
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress += OnConfirmPress;
 
         //GameManager.Instance.Input.OnTriggerRightInput += OnTriggerRightInput;
-		GameManager.Instance.Input.GetButton(ButtonId.Special).OnPress += OnTriggerRightInput;
+		GameManager.Instance.Input.GetButton(ButtonId.Action).OnPress += OnTriggerRightInput;
+		GameManager.Instance.Input.GetButton(ButtonId.Special).OnPress += OnSpecialInput;
 
         _enemyController.Start();
     }
@@ -33,7 +34,8 @@ public class MapWalkState : BaseGameState {
         GameManager.Instance.Input.GetButton(ButtonId.Confirm).OnPress -= OnConfirmPress;
 
         //GameManager.Instance.Input.OnTriggerRightInput -= OnTriggerRightInput;
-		GameManager.Instance.Input.GetButton(ButtonId.Special).OnPress -= OnTriggerRightInput;
+		GameManager.Instance.Input.GetButton(ButtonId.Action).OnPress -= OnTriggerRightInput;
+		GameManager.Instance.Input.GetButton(ButtonId.Special).OnPress -= OnSpecialInput;
 
         base.ExitState();
     }
@@ -127,4 +129,8 @@ public class MapWalkState : BaseGameState {
             _playerView.ShootProjectile(arrowOrigin, target, null);
         }
     }
+
+	private void OnSpecialInput() {
+		_enemyController.KillAll();
+	}
 }
