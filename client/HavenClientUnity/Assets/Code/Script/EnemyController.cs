@@ -25,6 +25,13 @@ public class EnemyController : MonoBehaviour {
         _enemyTimer.StartTimer();
     }
 
+	public void KillAll() {
+		foreach(EnemyView enemy in _enemies)
+            GameObject.Destroy(enemy.gameObject);
+
+        _enemies.Clear();
+	}
+
     private void SpawnEnemy(TimeKeeper timer) {
         if(_enemies.Count >= _spawnMax) return;
 
